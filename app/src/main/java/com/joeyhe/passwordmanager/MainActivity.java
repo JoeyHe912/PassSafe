@@ -6,7 +6,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.EditText;
 
-import com.joeyhe.passwordmanager.Interfaces.PasswordGeneratorInterface;
+import com.joeyhe.passwordmanager.interfaces.InformationStorageInterface;
+import com.joeyhe.passwordmanager.interfaces.PasswordGeneratorInterface;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -21,6 +22,12 @@ public class MainActivity extends AppCompatActivity {
         Intent intent = new Intent();
         intent.setClass(MainActivity.this, PasswordGeneratorInterface.class);
         intent.putExtra("MasterPassword", String.valueOf(mpEditor.getText()));
+        startActivity(intent);
+    }
+
+    public void clickAdd(View view){
+        Intent intent = new Intent();
+        intent.setClass(MainActivity.this, InformationStorageInterface.class);
         startActivity(intent);
     }
 }

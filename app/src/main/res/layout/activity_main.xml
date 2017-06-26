@@ -36,4 +36,15 @@
         android:ems="10"
         android:inputType="textPassword"
         android:text="masterpassword" />
+
+    <Button
+        android:id="@+id/button_add"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:layout_below="@+id/button_PG"
+        android:layout_marginTop="125dp"
+        android:onClick="clickAdd"
+        android:text="Add an entry" />
+
 </RelativeLayout>

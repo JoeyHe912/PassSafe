@@ -1,8 +1,9 @@
-package com.joeyhe.passwordmanager.Interfaces;
+package com.joeyhe.passwordmanager.interfaces;
 
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.CheckBox;
 import android.widget.EditText;
@@ -32,15 +33,22 @@ public class PasswordGeneratorInterface extends AppCompatActivity
     private CheckBox similar;
     private EditText length;
     private SeekBar sbLength;
+    private String pass;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_password_generator_interface);
         Intent intent = getIntent();
         pg = new PasswordGenerator(intent.getStringExtra("MasterPassword"));
+        pass = intent.getStringExtra("Pass");
         init();
-        passwordView.setText(intent.getStringExtra("MasterPassword"));
+        renew();
         listenSeekBar();
+        android.support.v7.app.ActionBar actionBar = getSupportActionBar();
+        if(actionBar != null){
+            actionBar.setHomeButtonEnabled(true);
+            actionBar.setDisplayHomeAsUpEnabled(true);
+        }
     }
 
     private void init(){
@@ -56,16 +64,20 @@ public class PasswordGeneratorInterface extends AppCompatActivity
 
     public void clickGenerate(View view){
         if (upper.isChecked() | lower.isChecked() | symbol.isChecked() | number.isChecked()) {
-            String password = pg.generate(Integer.parseInt(length.getText().toString()),
-                    upper.isChecked(), lower.isChecked(), symbol.isChecked(), number.isChecked(), similar.isChecked());
-            passwordView.setText(password);
+            renew();
         }
         else{
             new SweetAlertDialog(this, SweetAlertDialog.ERROR_TYPE)
                     .setTitleText("Oops...")
-                    .setContentText("Please check at lease one of the options above.")
+                    .setContentText("Please include at least one type of characters.")
                     .show();
         }
+    }
+
+    private void renew(){
+        String password = pg.generate(Integer.parseInt(length.getText().toString()),
+                upper.isChecked(), lower.isChecked(), symbol.isChecked(), number.isChecked(), similar.isChecked());
+        passwordView.setText(password);
     }
 
     private void listenSeekBar(){
@@ -102,5 +114,30 @@ public class PasswordGeneratorInterface extends AppCompatActivity
     public void onDialogNumberSet(int reference, BigInteger number, double decimal, boolean isNegative, BigDecimal fullNumber) {
         length.setText(String.valueOf(number));
         sbLength.setProgress(number.intValue()-4);
+    }
+
+    public void clickAccept(View view){
+        Intent intent = new Intent();
+        intent.putExtra("Pass", passwordView.getText());
+        setResult(0,intent);
+        finish();
+    }
+
+    @Override
+    public void onBackPressed(){
+        Intent intent = new Intent();
+        intent.putExtra("Pass", pass);
+        setResult(0,intent);
+        finish();
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                onBackPressed();
+                return true;
+        }
+        return super.onOptionsItemSelected(item);
     }
 }

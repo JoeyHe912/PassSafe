@@ -50,7 +50,7 @@ public class PasswordGenerator {
         System.out.println(dict.length());
         System.out.println(dict);
 
-        int iterationCount = 10000;
+        int iterationCount = 1000;
         int keyLength = 256;
         int saltLength = keyLength / 8; // same size as key output
         int i = 0;
