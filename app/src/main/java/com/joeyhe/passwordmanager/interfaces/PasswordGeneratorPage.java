@@ -21,7 +21,7 @@ import java.math.BigInteger;
 import cn.pedant.SweetAlert.SweetAlertDialog;
 
 
-public class PasswordGeneratorInterface extends AppCompatActivity
+public class PasswordGeneratorPage extends AppCompatActivity
         implements NumberPickerDialogFragment.NumberPickerDialogHandlerV2{
 
     private PasswordGenerator pg;
@@ -34,10 +34,11 @@ public class PasswordGeneratorInterface extends AppCompatActivity
     private EditText length;
     private SeekBar sbLength;
     private String pass;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_password_generator_interface);
+        setContentView(R.layout.activity_password_generator_page);
         Intent intent = getIntent();
         pg = new PasswordGenerator(intent.getStringExtra("MasterPassword"));
         pass = intent.getStringExtra("Pass");
@@ -52,21 +53,20 @@ public class PasswordGeneratorInterface extends AppCompatActivity
     }
 
     private void init(){
-        upper = (CheckBox)findViewById(R.id.check_upper);
-        lower = (CheckBox)findViewById(R.id.check_lower);
-        number = (CheckBox)findViewById(R.id.check_number);
-        symbol = (CheckBox)findViewById(R.id.check_symbol);
-        similar = (CheckBox)findViewById(R.id.check_excludeSimilar);
-        length = (EditText)findViewById(R.id.editor_length);
-        passwordView = (TextView) findViewById(R.id.view_password);
-        sbLength = (SeekBar)findViewById(R.id.seekBar_length);
+        upper = (CheckBox)findViewById(R.id.chk_upper);
+        lower = (CheckBox)findViewById(R.id.chk_lower);
+        number = (CheckBox)findViewById(R.id.chk_number);
+        symbol = (CheckBox)findViewById(R.id.chk_symbol);
+        similar = (CheckBox)findViewById(R.id.chk_excludeSimilar);
+        length = (EditText)findViewById(R.id.txt_length);
+        passwordView = (TextView) findViewById(R.id.txt_pg_password);
+        sbLength = (SeekBar)findViewById(R.id.seek_length);
     }
 
     public void clickGenerate(View view){
         if (upper.isChecked() | lower.isChecked() | symbol.isChecked() | number.isChecked()) {
             renew();
-        }
-        else{
+        }else{
             new SweetAlertDialog(this, SweetAlertDialog.ERROR_TYPE)
                     .setTitleText("Oops...")
                     .setContentText("Please include at least one type of characters.")

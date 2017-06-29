@@ -17,10 +17,10 @@ import java.security.Security;
 public class PasswordGenerator {
 
     private String masterPass;
-    private final String uppers = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
-    private final String lowers = "abcdefghijklmnopqrstuvwxyz";
-    private final String digits = "0123456789";
-    private final String symbols = "!@#$%&*-_+[]/.()~^";
+    private final String UPPERS = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+    private final String LOWERS = "abcdefghijklmnopqrstuvwxyz";
+    private final String DIGITS = "0123456789";
+    private final String SYMBOLS = "!@#$%&*-_+[]/.()~^";
     static {
         Security.insertProviderAt(new org.spongycastle.jce.provider.BouncyCastleProvider(), 1);
     }
@@ -29,26 +29,24 @@ public class PasswordGenerator {
         this.masterPass = masterPass;
     }
 
-    public String generate(int length, boolean hasUpper, boolean hasLower, boolean hasSymbols, boolean hasDigits, boolean excludeSimilar){
+    public String generate(int length, boolean hasUpper, boolean hasLower, boolean hasSymbol, boolean hasDigit, boolean excludeSimilar){
         StringBuilder pw = new StringBuilder();
         String dict = new String();
         if (hasUpper){
-            dict = dict.concat(uppers);
+            dict = dict.concat(UPPERS);
         }
         if (hasLower){
-            dict = dict.concat(lowers);
+            dict = dict.concat(LOWERS);
         }
-        if (hasSymbols){
-            dict = dict.concat(symbols);
+        if (hasSymbol){
+            dict = dict.concat(SYMBOLS);
         }
-        if (hasDigits){
-            dict = dict.concat(digits);
+        if (hasDigit){
+            dict = dict.concat(DIGITS);
         }
         if (excludeSimilar){
             dict = dict.replaceAll("i|I|1|L|l|0|o|O","");
         }
-        System.out.println(dict.length());
-        System.out.println(dict);
 
         int iterationCount = 1000;
         int keyLength = 256;

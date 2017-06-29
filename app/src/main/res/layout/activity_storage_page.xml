@@ -7,21 +7,21 @@
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
-    tools:context="com.joeyhe.passwordmanager.interfaces.InformationStorageInterface">
+    tools:context="com.joeyhe.passwordmanager.interfaces.StoragePage">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentStart="true"
         android:layout_alignParentTop="true"
-        android:orientation="vertical"
-        android:id="@+id/linearLayout">
+        android:orientation="vertical">
 
         <android.support.design.widget.TextInputLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
             <EditText
+                android:id="@+id/edt_storage_name"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="@string/name"
@@ -35,6 +35,7 @@
             android:layout_height="wrap_content">
 
             <EditText
+                android:id="@+id/edt_storage_website"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="@string/website"
@@ -48,7 +49,7 @@
             android:layout_height="wrap_content">
 
             <EditText
-                android:id="@+id/editText2"
+                android:id="@+id/edt_storage_login"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="@string/login_username"
@@ -66,10 +67,10 @@
                 android:id="@+id/textInputLayout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_toStartOf="@+id/button_dice">
+                android:layout_toStartOf="@+id/btn_dice">
 
                 <com.maksim88.passwordedittext.PasswordEditText
-                    android:id="@+id/editText_password"
+                    android:id="@+id/edt_storage_password"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:hint="@string/password"
@@ -78,13 +79,13 @@
             </android.support.design.widget.TextInputLayout>
 
             <Button
-                android:id="@+id/button_dice"
+                android:id="@+id/btn_dice"
                 android:layout_width="50dp"
                 android:layout_height="50dp"
                 android:layout_alignBottom="@+id/textInputLayout"
                 android:layout_alignParentEnd="true"
                 android:layout_centerVertical="true"
-                android:background="@drawable/ic_dice"
+                android:background="@drawable/btn_dice"
                 android:onClick="clickDice" />
 
         </RelativeLayout>
@@ -94,7 +95,7 @@
             android:layout_height="wrap_content">
 
             <EditText
-                android:id="@+id/editText"
+                android:id="@+id/edt_storage_note"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="@string/note_optional"
@@ -115,7 +116,6 @@
         android:orientation="horizontal">
 
         <Button
-            android:id="@+id/button3"
             style="@android:style/Widget.Holo.Light.Button"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
@@ -132,6 +132,7 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="5dp"
             android:layout_weight="1"
+            android:onClick="clickSave"
             android:text="@string/save"
             android:textAppearance="@android:style/Widget.Holo.Light.Button"
             android:textSize="30sp"

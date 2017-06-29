@@ -3,12 +3,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     package="com.joeyhe.passwordmanager">
 
-    <!-- To auto-complete the email text field in the login form with the user's emails -->
-    <uses-permission android:name="android.permission.GET_ACCOUNTS" />
-    <uses-permission android:name="android.permission.READ_PROFILE" />
-    <uses-permission android:name="android.permission.READ_CONTACTS" />
-
     <application
+        android:name=".PasswordManager"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
@@ -23,11 +19,19 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".interfaces.PasswordGeneratorInterface"
+            android:name=".interfaces.PasswordGeneratorPage"
             android:label="Password Generator" />
         <activity
-            android:name=".interfaces.InformationStorageInterface"
+            android:name=".interfaces.StoragePage"
             android:label="Information Storage" />
+        <activity
+            android:name=".interfaces.MainPage"
+            android:label="@string/title_activity_main_page"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".interfaces.ViewPage"
+            android:label="@string/title_activity_view_page"
+            android:theme="@style/AppTheme.NoActionBar"></activity>
     </application>
 
 </manifest>
