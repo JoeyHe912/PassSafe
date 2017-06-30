@@ -1,13 +1,18 @@
 package com.joeyhe.passwordmanager.interfaces;
 
+import android.content.ClipData;
+import android.content.ClipboardManager;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
+import android.webkit.URLUtil;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import com.joeyhe.passwordmanager.PasswordManager;
 import com.joeyhe.passwordmanager.R;
@@ -76,8 +81,32 @@ public class ViewPage extends AppCompatActivity {
         accessed.setText(dateFormat.format(passNote.getAccessedDate()));
     }
 
-    private void updateAccessed(){
+    private void updateAccessed() {
         passNote.setAccessedDate(new Date());
         noteDao.update(passNote);
+    }
+
+    public void clickOpen(View view) {
+        Intent intent = new Intent();
+        intent.setAction(Intent.ACTION_VIEW);
+        Uri uri = Uri.parse(URLUtil.guessUrl(passNote.getWebSite()));
+        intent.setData(uri);
+        startActivity(intent);
+    }
+
+    public void clickCopy(View view) {
+        ClipboardManager clipboardManager = (ClipboardManager)getSystemService(CLIPBOARD_SERVICE);
+        ClipData clipData = null;
+        switch (view.getId()) {
+            case R.id.btn_copyLogin:
+                clipData = ClipData.newPlainText("login", login.getText());
+                break;
+            case R.id.btn_copyPass:
+                clipData = ClipData.newPlainText("pass", password.getText());
+                break;
+            default:
+        }
+        clipboardManager.setPrimaryClip(clipData);
+        Toast.makeText(this,"Copied!",Toast.LENGTH_SHORT).show();
     }
 }

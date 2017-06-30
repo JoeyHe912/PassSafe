@@ -9,7 +9,6 @@ import android.widget.TextView;
 
 import com.joeyhe.passwordmanager.models.PasswordNote;
 
-import java.text.DateFormat;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -28,13 +27,13 @@ public class PasswordNoteAdapter extends RecyclerView.Adapter<PasswordNoteAdapte
 
     static class NoteViewHolder extends RecyclerView.ViewHolder {
 
-        public TextView text;
-        public TextView comment;
+        public TextView name;
+        public TextView login;
 
         public NoteViewHolder(View itemView, final NoteClickListener clickListener) {
             super(itemView);
-            text = itemView.findViewById(R.id.textViewNoteText);
-            comment = itemView.findViewById(R.id.textViewNoteComment);
+            name = itemView.findViewById(R.id.txt_name);
+            login = itemView.findViewById(R.id.txt_login);
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
@@ -70,8 +69,8 @@ public class PasswordNoteAdapter extends RecyclerView.Adapter<PasswordNoteAdapte
     @Override
     public void onBindViewHolder(PasswordNoteAdapter.NoteViewHolder holder, int position) {
         PasswordNote note = dataset.get(position);
-        holder.text.setText(note.getName());
-        holder.comment.setText(DateFormat.getDateTimeInstance(DateFormat.MEDIUM, DateFormat.MEDIUM).format(note.getCreatedDate()));
+        holder.name.setText(note.getName());
+        holder.login.setText(note.getUserName());
     }
 
     @Override

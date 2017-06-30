@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -9,42 +10,30 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context="com.joeyhe.passwordmanager.MainActivity">
 
-    <TextView
-        android:layout_width="wrap_content"
+    <android.support.design.widget.TextInputLayout
+        android:id="@+id/textInputLayout3"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Hello World!"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentStart="true"
-        android:id="@+id/textView" />
+        app:passwordToggleEnabled="true">
+
+        <EditText
+            android:id="@+id/editor_mp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentStart="true"
+            android:layout_marginTop="21dp"
+            android:hint="MasterPassword"
+            android:inputType="textPassword"
+            android:text="MasterPassword" />
+    </android.support.design.widget.TextInputLayout>
 
     <Button
-        android:id="@+id/button_PG"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentStart="true"
-        android:layout_below="@+id/editor_mp"
-        android:onClick="clickPG"
-        android:text="Password Generator" />
-
-    <EditText
-        android:id="@+id/editor_mp"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentStart="true"
-        android:layout_below="@+id/textView"
-        android:layout_marginTop="21dp"
-        android:ems="10"
-        android:inputType="textPassword"
-        android:text="@string/masterpassword" />
-
-    <Button
-        android:id="@+id/button4"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
         android:layout_marginTop="57dp"
         android:onClick="toMainPage"
-        android:text="Button"
-        android:layout_below="@+id/button_PG"
-        android:layout_alignParentStart="true" />
+        android:text="toMainPage"
+        android:textAppearance="@style/TextAppearance.AppCompat.Display1" />
 
 </RelativeLayout>

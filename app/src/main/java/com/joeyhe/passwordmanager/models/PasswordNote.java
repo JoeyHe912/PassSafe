@@ -3,7 +3,6 @@ package com.joeyhe.passwordmanager.models;
 import org.greenrobot.greendao.annotation.Entity;
 import org.greenrobot.greendao.annotation.Generated;
 import org.greenrobot.greendao.annotation.Id;
-import org.greenrobot.greendao.annotation.NotNull;
 
 import java.util.Date;
 
@@ -14,8 +13,7 @@ import java.util.Date;
 public class PasswordNote {
     @Id
     private Long id;
-
-    @NotNull
+    
     private String name;
     private String webSite;
     private String userName;
@@ -24,10 +22,10 @@ public class PasswordNote {
     private Date createdDate;
     private Date modifiedDate;
     private Date accessedDate;
-    @Generated(hash = 479546214)
-    public PasswordNote(Long id, @NotNull String name, String webSite,
-            String userName, String password, String note, Date createdDate,
-            Date modifiedDate, Date accessedDate) {
+    @Generated(hash = 1630728495)
+    public PasswordNote(Long id, String name, String webSite, String userName,
+            String password, String note, Date createdDate, Date modifiedDate,
+            Date accessedDate) {
         this.id = id;
         this.name = name;
         this.webSite = webSite;

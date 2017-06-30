@@ -6,9 +6,9 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.View;
 
+import com.dinuscxj.itemdecoration.PinnedHeaderDecoration;
 import com.joeyhe.passwordmanager.PasswordManager;
 import com.joeyhe.passwordmanager.PasswordNoteAdapter;
 import com.joeyhe.passwordmanager.R;
@@ -26,7 +26,7 @@ public class MainPage extends AppCompatActivity {
     private PasswordNoteAdapter noteAdapter;
     private PasswordNoteDao noteDao;
     private Query<PasswordNote> notesQuery;
-
+    private String masterPass;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -43,26 +43,33 @@ public class MainPage extends AppCompatActivity {
 //            }
 //        });
 
+        Intent intent = getIntent();
+        masterPass = intent.getStringExtra("MasterPassword");
         DaoSession daoSession = ((PasswordManager) getApplication()).getDaoSession();
         noteDao = daoSession.getPasswordNoteDao();
-
         init();
-
         notesQuery = noteDao.queryBuilder().orderAsc(PasswordNoteDao.Properties.Name).build();
         updateNotes();
     }
 
     private void updateNotes() {
         List<PasswordNote> notes = notesQuery.list();
-        Log.d("DaoExample", ""+notes.size());
         noteAdapter.setNotes(notes);
     }
 
     protected void init() {
         rcyNotes = (RecyclerView) findViewById(R.id.rcy_notes);
-//        rcyNotes.setHasFixedSize(true);
         rcyNotes.setLayoutManager(new LinearLayoutManager(this));
-
+        PinnedHeaderDecoration pinnedHeaderDecoration = new PinnedHeaderDecoration();
+        pinnedHeaderDecoration.registerTypePinnedHeader(1,
+                new PinnedHeaderDecoration.PinnedHeaderCreator() {
+                    @Override
+                    public boolean create(RecyclerView parent, int adapterPosition) {
+                        return true;
+                    }
+                }
+        );
+        rcyNotes.addItemDecoration(pinnedHeaderDecoration);
         noteAdapter = new PasswordNoteAdapter(noteClickListener);
         rcyNotes.setAdapter(noteAdapter);
     }
@@ -82,6 +89,7 @@ public class MainPage extends AppCompatActivity {
     public void clickAdd(View view){
         Intent intent = new Intent();
         intent.setClass(MainPage.this, StoragePage.class);
+        intent.putExtra("MasterPassword",masterPass);
         startActivityForResult(intent,0);
     }
 

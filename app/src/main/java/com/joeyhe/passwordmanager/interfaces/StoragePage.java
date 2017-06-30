@@ -13,7 +13,6 @@ import com.joeyhe.passwordmanager.R;
 import com.joeyhe.passwordmanager.models.DaoSession;
 import com.joeyhe.passwordmanager.models.PasswordNote;
 import com.joeyhe.passwordmanager.models.PasswordNoteDao;
-import com.maksim88.passwordedittext.PasswordEditText;
 
 import java.util.Date;
 
@@ -21,10 +20,11 @@ import cn.pedant.SweetAlert.SweetAlertDialog;
 
 public class StoragePage extends AppCompatActivity {
 
+    private String masterPass;
     private TextView name;
     private TextView website;
     private TextView login;
-    private PasswordEditText pass;
+    private TextView pass;
     private TextView note;
     private PasswordNoteDao noteDao;
     @Override
@@ -37,6 +37,8 @@ public class StoragePage extends AppCompatActivity {
             actionBar.setHomeButtonEnabled(true);
             actionBar.setDisplayHomeAsUpEnabled(true);
         }
+        Intent intent = getIntent();
+        masterPass = intent.getStringExtra("MasterPassword");
         DaoSession daoSession = ((PasswordManager) getApplication()).getDaoSession();
         noteDao = daoSession.getPasswordNoteDao();
     }
@@ -45,7 +47,7 @@ public class StoragePage extends AppCompatActivity {
         name = (TextView)findViewById((R.id.edt_storage_name));
         website = (TextView)findViewById((R.id.edt_storage_website));
         login = (TextView)findViewById((R.id.edt_storage_login));
-        pass = (PasswordEditText)findViewById(R.id.edt_storage_password);
+        pass = (TextView) findViewById(R.id.edt_storage_password);
         note = (TextView)findViewById((R.id.edt_storage_note));
 
     }
@@ -53,7 +55,7 @@ public class StoragePage extends AppCompatActivity {
     public void clickDice(View view){
         Intent intent = new Intent();
         intent.setClass(StoragePage.this, PasswordGeneratorPage.class);
-        intent.putExtra("MasterPassword", "mp");
+        intent.putExtra("MasterPassword", masterPass);
         intent.putExtra("Pass", pass.getText().toString());
         startActivityForResult(intent, 0);
     }
