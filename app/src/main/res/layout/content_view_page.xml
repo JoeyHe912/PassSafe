@@ -135,7 +135,7 @@
                 android:focusable="false"
                 android:hint="@string/note"
                 android:inputType="none"
-                android:maxLines="1"
+                android:maxLines="4"
                 tools:focusableInTouchMode="false" />
 
         </android.support.design.widget.TextInputLayout>

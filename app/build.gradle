@@ -10,6 +10,7 @@ android {
         targetSdkVersion 23
         versionCode 1
         versionName "1.0"
+        vectorDrawables.useSupportLibrary = true
     }
     buildTypes {
         release {
@@ -34,5 +35,8 @@ dependencies {
     compile 'org.greenrobot:greendao:3.2.2'
     testCompile 'junit:junit:4.12'
     compile 'com.bigkoo:quicksidebar:1.0.3'
-    compile 'com.dinuscxj:recycleritemdecoration:1.0.0'
+    compile 'ca.barrenechea.header-decor:header-decor:0.2.8'
+}
+greendao {
+    schemaVersion 4
 }

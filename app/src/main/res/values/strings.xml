@@ -17,10 +17,13 @@
     <string name="symbols_e_g">Symbols (e.g. !@#$%)</string>
     <string name="uppercase_letters_e_g_abcde">Uppercase letters (e.g. ABCDE)</string>
     <string name="length">length</string>
-    <string name="title_activity_main_page">MainPage</string>
+    <string name="title_activity_main_page">Password Manager</string>
     <string name="title_activity_view_page">ViewPage</string>
     <string name="created">created</string>
     <string name="modified">modified</string>
     <string name="note">note</string>
     <string name="accessed">accessed</string>
+    <string name="action_settings">settings</string>
+    <string name="delete">delete</string>
+    <string name="edit">edit</string>
 </resources>
