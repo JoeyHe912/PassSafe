@@ -1,4 +1,4 @@
-package com.joeyhe.passwordmanager.interfaces;
+package com.joeyhe.passwordmanager.activities;
 
 import android.content.ClipData;
 import android.content.ClipboardManager;
@@ -17,18 +17,18 @@ import android.webkit.URLUtil;
 import android.widget.EditText;
 import android.widget.Toast;
 
-import com.joeyhe.passwordmanager.PasswordManager;
 import com.joeyhe.passwordmanager.R;
-import com.joeyhe.passwordmanager.models.DaoSession;
-import com.joeyhe.passwordmanager.models.PasswordNote;
-import com.joeyhe.passwordmanager.models.PasswordNoteDao;
+import com.joeyhe.passwordmanager.db.DaoSession;
+import com.joeyhe.passwordmanager.db.DatabaseHelper;
+import com.joeyhe.passwordmanager.db.PasswordNote;
+import com.joeyhe.passwordmanager.db.PasswordNoteDao;
 
 import java.text.DateFormat;
 import java.util.Date;
 
 import cn.pedant.SweetAlert.SweetAlertDialog;
 
-public class ViewPage extends AppCompatActivity {
+public class ViewActivity extends AppCompatActivity {
 
     private EditText website;
     private EditText login;
@@ -40,12 +40,12 @@ public class ViewPage extends AppCompatActivity {
     private PasswordNoteDao noteDao;
     private PasswordNote passNote;
     private boolean notFavorite;
-    private int resultCode = -1;
-    private String masterPass;
+    private int resultCode = RESULT_CANCELED;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_view_page);
+        setContentView(R.layout.activity_view);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         ActionBar actionBar = getSupportActionBar();
@@ -53,9 +53,9 @@ public class ViewPage extends AppCompatActivity {
             actionBar.setHomeButtonEnabled(true);
             actionBar.setDisplayHomeAsUpEnabled(true);
         }
-        DaoSession daoSession = ((PasswordManager) getApplication()).getDaoSession();
+        DaoSession daoSession = DatabaseHelper.getInstance().getDaoSession();
         noteDao = daoSession.getPasswordNoteDao();
-        init();
+        initView();
         setValues();
         updateAccessed();
         final FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
@@ -73,7 +73,7 @@ public class ViewPage extends AppCompatActivity {
                                 fab.setImageResource(notFavorite ? android.R.drawable.btn_star_big_off : android.R.drawable.btn_star_big_on);
                                 passNote.setNotFavorite(notFavorite);
                                 noteDao.update(passNote);
-                                resultCode = 0;
+                                resultCode = RESULT_OK;
                             }
                         });
                     }
@@ -96,10 +96,9 @@ public class ViewPage extends AppCompatActivity {
                 return true;
             case R.id.action_edit:
                 Intent intent = new Intent();
-                intent.setClass(ViewPage.this, StoragePage.class);
+                intent.setClass(ViewActivity.this, StorageActivity.class);
                 intent.putExtra("isEdit", true);
                 intent.putExtra("id", passNote.getId());
-                intent.putExtra("masterPass", masterPass);
                 startActivityForResult(intent, 0);
                 return true;
             case R.id.action_delete:
@@ -114,7 +113,7 @@ public class ViewPage extends AppCompatActivity {
                             public void onClick(SweetAlertDialog sDialog) {
                                 sDialog.dismissWithAnimation();
                                 noteDao.delete(passNote);
-                                resultCode = 0;
+                                resultCode = RESULT_OK;
                                 onBackPressed();
                             }
                         })
@@ -127,7 +126,7 @@ public class ViewPage extends AppCompatActivity {
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (resultCode == 0) {
+        if (resultCode == RESULT_OK) {
             this.resultCode = resultCode;
             ((CollapsingToolbarLayout) findViewById(R.id.toolbar_layout)).setTitle(passNote.getName());
             website.setText(passNote.getWebSite());
@@ -139,7 +138,7 @@ public class ViewPage extends AppCompatActivity {
         }
     }
 
-    private void init() {
+    private void initView() {
         website = (EditText)findViewById(R.id.edt_view_website);
         login = (EditText)findViewById(R.id.edt_view_login);
         password = (EditText)findViewById(R.id.edt_view_password);
@@ -149,7 +148,6 @@ public class ViewPage extends AppCompatActivity {
         accessed = (EditText)findViewById(R.id.edt_view_accessed);
         Intent intent = getIntent();
         long id = intent.getLongExtra("id",1);
-        masterPass = intent.getStringExtra("masterPass" );
         passNote = noteDao.load(id);
         notFavorite = passNote.getNotFavorite();
     }

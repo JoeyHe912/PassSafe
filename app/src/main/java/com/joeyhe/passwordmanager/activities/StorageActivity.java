@@ -1,4 +1,4 @@
-package com.joeyhe.passwordmanager.interfaces;
+package com.joeyhe.passwordmanager.activities;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -9,19 +9,18 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
 
-import com.joeyhe.passwordmanager.PasswordManager;
 import com.joeyhe.passwordmanager.R;
-import com.joeyhe.passwordmanager.models.DaoSession;
-import com.joeyhe.passwordmanager.models.PasswordNote;
-import com.joeyhe.passwordmanager.models.PasswordNoteDao;
+import com.joeyhe.passwordmanager.db.DaoSession;
+import com.joeyhe.passwordmanager.db.DatabaseHelper;
+import com.joeyhe.passwordmanager.db.PasswordNote;
+import com.joeyhe.passwordmanager.db.PasswordNoteDao;
 
 import java.util.Date;
 
 import cn.pedant.SweetAlert.SweetAlertDialog;
 
-public class StoragePage extends AppCompatActivity {
+public class StorageActivity extends AppCompatActivity {
 
-    private String masterPass;
     private TextView name;
     private TextView website;
     private TextView login;
@@ -33,18 +32,17 @@ public class StoragePage extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_storage_page);
-        init();
+        setContentView(R.layout.activity_storage);
+        initView();
         ActionBar actionBar = getSupportActionBar();
         if(actionBar != null){
             actionBar.setHomeButtonEnabled(true);
             actionBar.setDisplayHomeAsUpEnabled(true);
         }
-        DaoSession daoSession = ((PasswordManager) getApplication()).getDaoSession();
+        DaoSession daoSession = DatabaseHelper.getInstance().getDaoSession();
         noteDao = daoSession.getPasswordNoteDao();
         Intent intent = getIntent();
         isEdit = intent.getBooleanExtra("isEdit", false);
-        masterPass = intent.getStringExtra("masterPass" );
         if (isEdit) {
             setTitle("Editing" );
             long id = intent.getLongExtra("id", 1);
@@ -58,7 +56,7 @@ public class StoragePage extends AppCompatActivity {
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.menu_storage_page, menu);
+        getMenuInflater().inflate(R.menu.menu_with_check, menu);
         return super.onCreateOptionsMenu(menu);
     }
 
@@ -88,7 +86,7 @@ public class StoragePage extends AppCompatActivity {
                         passNote.setAccessedDate(new Date());
                         noteDao.insert(passNote);
                     }
-                    setResult(0);
+                    setResult(RESULT_OK);
                     finish();
                 }
                 return true;
@@ -97,7 +95,7 @@ public class StoragePage extends AppCompatActivity {
         }
     }
 
-    private void init() {
+    private void initView() {
         name = (TextView)findViewById((R.id.edt_storage_name));
         website = (TextView)findViewById((R.id.edt_storage_website));
         login = (TextView)findViewById((R.id.edt_storage_login));
@@ -115,16 +113,15 @@ public class StoragePage extends AppCompatActivity {
 
     public void clickDice(View view) {
         Intent intent = new Intent();
-        intent.setClass(StoragePage.this, PasswordGeneratorPage.class);
-        intent.putExtra("MasterPassword", masterPass);
+        intent.setClass(StorageActivity.this, PasswordGenerationActivity.class);
         intent.putExtra("Pass", pass.getText().toString());
         startActivityForResult(intent, 0);
     }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data){
-        switch (requestCode){
-            case 0:
+        switch (resultCode) {
+            case RESULT_OK:
                 pass.setText(data.getStringExtra("Pass"));
                 break;
             default:
@@ -143,8 +140,8 @@ public class StoragePage extends AppCompatActivity {
                     @Override
                     public void onClick(SweetAlertDialog sDialog) {
                         sDialog.dismissWithAnimation();
-                        StoragePage.this.setResult(-1);
-                        StoragePage.this.finish();
+                        StorageActivity.this.setResult(RESULT_CANCELED);
+                        StorageActivity.this.finish();
                     }
                 })
                 .show();

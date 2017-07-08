@@ -1,4 +1,4 @@
-package com.joeyhe.passwordmanager.interfaces;
+package com.joeyhe.passwordmanager.activities;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -12,12 +12,12 @@ import android.view.View;
 import com.bigkoo.quicksidebar.QuickSideBarTipsView;
 import com.bigkoo.quicksidebar.QuickSideBarView;
 import com.bigkoo.quicksidebar.listener.OnQuickSideBarTouchListener;
-import com.joeyhe.passwordmanager.PasswordManager;
-import com.joeyhe.passwordmanager.PasswordNoteAdapter;
 import com.joeyhe.passwordmanager.R;
-import com.joeyhe.passwordmanager.models.DaoSession;
-import com.joeyhe.passwordmanager.models.PasswordNote;
-import com.joeyhe.passwordmanager.models.PasswordNoteDao;
+import com.joeyhe.passwordmanager.adapters.PasswordNoteAdapter;
+import com.joeyhe.passwordmanager.db.DaoSession;
+import com.joeyhe.passwordmanager.db.DatabaseHelper;
+import com.joeyhe.passwordmanager.db.PasswordNote;
+import com.joeyhe.passwordmanager.db.PasswordNoteDao;
 
 import org.greenrobot.greendao.query.Query;
 
@@ -27,7 +27,7 @@ import java.util.List;
 
 import ca.barrenechea.widget.recyclerview.decoration.StickyHeaderDecoration;
 
-public class MainPage extends AppCompatActivity implements OnQuickSideBarTouchListener {
+public class MainActivity extends AppCompatActivity implements OnQuickSideBarTouchListener {
 
     private final HashMap<String, Integer> letters = new HashMap<>();
     private final ArrayList<String> customLetters = new ArrayList<>();
@@ -35,7 +35,6 @@ public class MainPage extends AppCompatActivity implements OnQuickSideBarTouchLi
     private PasswordNoteAdapter noteAdapter;
     private PasswordNoteDao noteDao;
     private Query<PasswordNote> notesQuery;
-    private String masterPass;
     private QuickSideBarView quickSideBarView;
     private QuickSideBarTipsView quickSideBarTipsView;
     private FloatingActionButton fabAdd;
@@ -44,14 +43,13 @@ public class MainPage extends AppCompatActivity implements OnQuickSideBarTouchLi
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main_page);
+        setContentView(R.layout.activity_main);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         Intent intent = getIntent();
-        masterPass = intent.getStringExtra("MasterPassword" );
-        DaoSession daoSession = ((PasswordManager) getApplication()).getDaoSession();
+        DaoSession daoSession = DatabaseHelper.getInstance().getDaoSession();
         noteDao = daoSession.getPasswordNoteDao();
-        init();
+        initView();
         notesQuery = noteDao.queryBuilder().orderAsc(PasswordNoteDao.Properties.NotFavorite,
                 PasswordNoteDao.Properties.NotLetter, PasswordNoteDao.Properties.Name).build();
         updateNotes();
@@ -91,7 +89,7 @@ public class MainPage extends AppCompatActivity implements OnQuickSideBarTouchLi
         }).start();
     }
 
-    protected void init() {
+    protected void initView() {
         rcyNotes = (RecyclerView) findViewById(R.id.rcy_notes);
         rcyNotes.setLayoutManager(new LinearLayoutManager(this));
         PasswordNoteAdapter.NoteClickListener noteClickListener = new PasswordNoteAdapter.NoteClickListener() {
@@ -99,9 +97,8 @@ public class MainPage extends AppCompatActivity implements OnQuickSideBarTouchLi
             public void onNoteClick(int position) {
                 PasswordNote note = noteAdapter.getNote(position);
                 Intent intent = new Intent();
-                intent.setClass(MainPage.this, ViewPage.class);
+                intent.setClass(MainActivity.this, ViewActivity.class);
                 intent.putExtra("id", note.getId());
-                intent.putExtra("masterPass", masterPass);
                 startActivityForResult(intent, 0);
             }
         };
@@ -127,16 +124,15 @@ public class MainPage extends AppCompatActivity implements OnQuickSideBarTouchLi
 
     public void clickAdd(View view) {
         Intent intent = new Intent();
-        intent.setClass(MainPage.this, StoragePage.class);
+        intent.setClass(MainActivity.this, StorageActivity.class);
         intent.putExtra("isEdit", false);
-        intent.putExtra("masterPass", masterPass);
         startActivityForResult(intent, 0);
     }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         switch (resultCode) {
-            case 0:
+            case RESULT_OK:
                 updateNotes();
                 break;
             default:

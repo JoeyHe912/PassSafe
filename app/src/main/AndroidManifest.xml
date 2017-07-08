@@ -12,23 +12,26 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         tools:replace="android:icon">
-        <activity android:name=".MainActivity">
+        <activity android:name=".activities.AuthenticationActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
         <activity
-            android:name=".interfaces.PasswordGeneratorPage"
+            android:name=".activities.PasswordGenerationActivity"
             android:label="Password Generator" />
-        <activity android:name=".interfaces.StoragePage" />
+        <activity android:name=".activities.StorageActivity" />
         <activity
-            android:name=".interfaces.MainPage"
+            android:name=".activities.MainActivity"
             android:label="@string/title_activity_main_page"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name=".interfaces.ViewPage"
-            android:theme="@style/AppTheme.NoActionBar"/>
+            android:name=".activities.ViewActivity"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".activities.MasterPasswordSettingActivity"
+            android:label="@string/title_master_password_setting" />
     </application>
 
 </manifest>

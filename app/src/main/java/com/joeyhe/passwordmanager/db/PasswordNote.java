@@ -1,4 +1,4 @@
-package com.joeyhe.passwordmanager.models;
+package com.joeyhe.passwordmanager.db;
 
 import org.greenrobot.greendao.annotation.Entity;
 import org.greenrobot.greendao.annotation.Generated;

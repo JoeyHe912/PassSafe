@@ -5,8 +5,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
-    tools:context="com.joeyhe.passwordmanager.interfaces.MainPage"
-    tools:showIn="@layout/activity_main_page">
+    tools:context="com.joeyhe.passwordmanager.activities.MainActivity"
+    tools:showIn="@layout/activity_main">
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/rcy_notes"

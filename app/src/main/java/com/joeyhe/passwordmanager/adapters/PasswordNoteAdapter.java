@@ -1,4 +1,4 @@
-package com.joeyhe.passwordmanager;
+package com.joeyhe.passwordmanager.adapters;
 
 import android.graphics.Color;
 import android.support.annotation.NonNull;
@@ -8,7 +8,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.joeyhe.passwordmanager.models.PasswordNote;
+import com.joeyhe.passwordmanager.R;
+import com.joeyhe.passwordmanager.db.PasswordNote;
 
 import java.security.SecureRandom;
 import java.util.ArrayList;
@@ -49,7 +50,7 @@ public class PasswordNoteAdapter extends RecyclerView.Adapter<PasswordNoteAdapte
     @Override
     public HeaderHolder onCreateHeaderViewHolder(ViewGroup parent) {
         View view = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.header_item, parent, false);
+                .inflate(R.layout.item_header, parent, false);
         return new HeaderHolder(view);
     }
 
@@ -61,7 +62,7 @@ public class PasswordNoteAdapter extends RecyclerView.Adapter<PasswordNoteAdapte
             if (getHeaderId(position) == 1000) {
                 viewholder.header.setText("#" );
             } else {
-                viewholder.header.setText((char) getHeaderId(position) + "" );
+                viewholder.header.setText(String.format("%s", getHeaderId(position)));
             }
         }
         viewholder.header.setBackgroundColor(getRandomColor());

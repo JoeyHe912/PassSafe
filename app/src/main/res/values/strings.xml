@@ -26,4 +26,10 @@
     <string name="action_settings">settings</string>
     <string name="delete">delete</string>
     <string name="edit">edit</string>
+    <string name="title_master_password_setting">Set Master Password</string>
+    <string name="enter_master_password">Enter Master Password</string>
+    <string name="confirm_master_password">Confirm Master Password</string>
+    <string name="authenticate">Authenticate</string>
+    <string name="set_master_password_tips">Please choose a strong Master Password which will be used to encrypt your password notes. And keep it safely. If you lose it, there will be no way to recover it.</string>
+    <string name="open">open</string>
 </resources>

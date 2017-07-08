@@ -2,10 +2,7 @@ package com.joeyhe.passwordmanager;
 
 import android.app.Application;
 
-import com.joeyhe.passwordmanager.models.DaoMaster;
-import com.joeyhe.passwordmanager.models.DaoSession;
-
-import org.greenrobot.greendao.database.Database;
+import com.joeyhe.passwordmanager.db.DaoSession;
 
 /**
  * Created by HGY on 2017/6/27.
@@ -13,7 +10,7 @@ import org.greenrobot.greendao.database.Database;
 
 public class PasswordManager extends Application {
     /** A flag to show how easily you can switch from standard SQLite to the encrypted SQLCipher. */
-    public static final boolean ENCRYPTED = false;
+    public static final boolean ENCRYPTED = true;
 
     private DaoSession daoSession;
 
@@ -21,12 +18,8 @@ public class PasswordManager extends Application {
     public void onCreate() {
         super.onCreate();
 
-        DaoMaster.DevOpenHelper helper = new DaoMaster.DevOpenHelper(this, ENCRYPTED ? "notes-db-encrypted" : "notes-db");
-        Database db = ENCRYPTED ? helper.getEncryptedWritableDb("super-secret") : helper.getWritableDb();
-        daoSession = new DaoMaster(db).newSession();
-    }
-
-    public DaoSession getDaoSession() {
-        return daoSession;
+//        DaoMaster.DevOpenHelper helper = new DaoMaster.DevOpenHelper(this, ENCRYPTED ? "notes-db-encrypted" : "notes-db");
+//        Database db = ENCRYPTED ? helper.getEncryptedWritableDb("MasterPasswor") : helper.getWritableDb();
+//        daoSession = new DaoMaster(db).newSession();
     }
 }

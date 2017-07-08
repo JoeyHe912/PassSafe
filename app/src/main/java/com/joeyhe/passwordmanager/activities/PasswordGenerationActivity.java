@@ -1,4 +1,4 @@
-package com.joeyhe.passwordmanager.interfaces;
+package com.joeyhe.passwordmanager.activities;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -13,7 +13,8 @@ import android.widget.TextView;
 import com.codetroopers.betterpickers.numberpicker.NumberPickerBuilder;
 import com.codetroopers.betterpickers.numberpicker.NumberPickerDialogFragment;
 import com.joeyhe.passwordmanager.R;
-import com.joeyhe.passwordmanager.models.PasswordGenerator;
+import com.joeyhe.passwordmanager.db.DatabaseHelper;
+import com.joeyhe.passwordmanager.utils.PasswordGenerator;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
@@ -21,7 +22,7 @@ import java.math.BigInteger;
 import cn.pedant.SweetAlert.SweetAlertDialog;
 
 
-public class PasswordGeneratorPage extends AppCompatActivity
+public class PasswordGenerationActivity extends AppCompatActivity
         implements NumberPickerDialogFragment.NumberPickerDialogHandlerV2{
 
     private PasswordGenerator pg;
@@ -38,11 +39,11 @@ public class PasswordGeneratorPage extends AppCompatActivity
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_password_generator_page);
+        setContentView(R.layout.activity_password_generation);
         Intent intent = getIntent();
-        pg = new PasswordGenerator(intent.getStringExtra("MasterPassword"));
+        pg = new PasswordGenerator(DatabaseHelper.getInstance().getMasterPass());
         pass = intent.getStringExtra("Pass");
-        init();
+        initView();
         renew();
         listenSeekBar();
         android.support.v7.app.ActionBar actionBar = getSupportActionBar();
@@ -52,7 +53,7 @@ public class PasswordGeneratorPage extends AppCompatActivity
         }
     }
 
-    private void init(){
+    private void initView() {
         upper = (CheckBox)findViewById(R.id.chk_upper);
         lower = (CheckBox)findViewById(R.id.chk_lower);
         number = (CheckBox)findViewById(R.id.chk_number);
@@ -119,7 +120,7 @@ public class PasswordGeneratorPage extends AppCompatActivity
     public void clickAccept(View view){
         Intent intent = new Intent();
         intent.putExtra("Pass", passwordView.getText());
-        setResult(0,intent);
+        setResult(RESULT_OK, intent);
         finish();
     }
 
@@ -127,7 +128,7 @@ public class PasswordGeneratorPage extends AppCompatActivity
     public void onBackPressed(){
         Intent intent = new Intent();
         intent.putExtra("Pass", pass);
-        setResult(0,intent);
+        setResult(RESULT_OK, intent);
         finish();
     }
 
