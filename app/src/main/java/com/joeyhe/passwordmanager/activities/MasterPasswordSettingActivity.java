@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.design.widget.TextInputLayout;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -19,6 +20,7 @@ import cn.pedant.SweetAlert.SweetAlertDialog;
 
 public class MasterPasswordSettingActivity extends AppCompatActivity {
 
+    private boolean isInitialising;
     private TextInputLayout tilEnter;
     private TextInputLayout tilConfirm;
     private EditText edtEnter;
@@ -28,7 +30,14 @@ public class MasterPasswordSettingActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        isInitialising = getIntent().getBooleanExtra("isInitialising", false);
+        setTitle(isInitialising ? "Set Master Password" : "Change Master Password");
         setContentView(R.layout.activity_master_password_setting);
+        ActionBar actionBar = getSupportActionBar();
+        if (actionBar != null && !isInitialising) {
+            actionBar.setHomeButtonEnabled(true);
+            actionBar.setDisplayHomeAsUpEnabled(true);
+        }
         initView();
     }
 
@@ -50,14 +59,18 @@ public class MasterPasswordSettingActivity extends AppCompatActivity {
         switch (item.getItemId()) {
             case R.id.action_save:
                 final SweetAlertDialog pDialog = new SweetAlertDialog(this, SweetAlertDialog.PROGRESS_TYPE);
-                pDialog.setTitleText("Initialising...").setCancelable(false);
+                pDialog.setTitleText(isInitialising ? "Initialising..." : "Resetting...").setCancelable(false);
                 pDialog.show();
                 new Thread(new Runnable() {
                     @Override
                     public void run() {
                         SharedPreferences sharedPreferences = getSharedPreferences("myPrefs", MODE_PRIVATE);
                         HashUtil hashUtil = new HashUtil(10000, 256, edtEnter.getText().toString());
-                        DatabaseHelper.initDatabase(MasterPasswordSettingActivity.this, edtEnter.getText().toString());
+                        if (isInitialising) {
+                            DatabaseHelper.initDatabase(MasterPasswordSettingActivity.this, edtEnter.getText().toString());
+                        } else {
+                            DatabaseHelper.getInstance().changeMasterPass(edtEnter.getText().toString());
+                        }
                         sharedPreferences.edit()
                                 .putString("hash", hashUtil.getStringHash())
                                 .putString("salt", hashUtil.getSalt())
@@ -75,12 +88,17 @@ public class MasterPasswordSettingActivity extends AppCompatActivity {
                         } catch (InterruptedException e) {
                             e.printStackTrace();
                         }
-                        Intent intent = new Intent();
-                        intent.setClass(MasterPasswordSettingActivity.this, MainActivity.class);
-                        startActivity(intent);
+                        if (isInitialising) {
+                            Intent intent = new Intent();
+                            intent.setClass(MasterPasswordSettingActivity.this, MainActivity.class);
+                            startActivity(intent);
+                        }
                         MasterPasswordSettingActivity.this.finish();
                     }
                 }).start();
+                return true;
+            case android.R.id.home:
+                finish();
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
@@ -92,6 +110,7 @@ public class MasterPasswordSettingActivity extends AppCompatActivity {
         tilConfirm = (TextInputLayout) findViewById(R.id.til_confirm);
         edtEnter = (EditText) findViewById(R.id.edt_enter);
         edtConfirm = (EditText) findViewById(R.id.edt_confirm);
+        tilEnter.setHint(isInitialising ? "Enter Master Password" : "Enter New Master Password");
         tilEnter.setError(getError(""));
         edtEnter.addTextChangedListener(new TextWatcher() {
             @Override
@@ -127,7 +146,7 @@ public class MasterPasswordSettingActivity extends AppCompatActivity {
                 if (edtEnter.getText().toString().equals(edtConfirm.getText().toString())) {
                     tilConfirm.setError(null);
                 } else {
-                    tilConfirm.setError("Master Passwords should match.");
+                    tilConfirm.setError("Master Password should match.");
                 }
                 invalidateOptionsMenu();
             }

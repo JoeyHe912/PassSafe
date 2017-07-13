@@ -84,7 +84,7 @@ public class ViewActivity extends AppCompatActivity {
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.menu_view_page, menu);
+        getMenuInflater().inflate(R.menu.menu_view_activity, menu);
         return true;
     }
 

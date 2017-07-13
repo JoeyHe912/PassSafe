@@ -4,7 +4,6 @@
     package="com.joeyhe.passwordmanager">
 
     <application
-        android:name=".PasswordManager"
         android:allowBackup="true"
         android:fullBackupContent="true"
         android:icon="@mipmap/ic_launcher"
@@ -29,9 +28,7 @@
         <activity
             android:name=".activities.ViewActivity"
             android:theme="@style/AppTheme.NoActionBar" />
-        <activity
-            android:name=".activities.MasterPasswordSettingActivity"
-            android:label="@string/title_master_password_setting" />
+        <activity android:name=".activities.MasterPasswordSettingActivity" />
     </application>
 
 </manifest>

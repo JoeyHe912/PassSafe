@@ -7,6 +7,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 
 import com.bigkoo.quicksidebar.QuickSideBarTipsView;
@@ -46,13 +48,32 @@ public class MainActivity extends AppCompatActivity implements OnQuickSideBarTou
         setContentView(R.layout.activity_main);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        Intent intent = getIntent();
         DaoSession daoSession = DatabaseHelper.getInstance().getDaoSession();
         noteDao = daoSession.getPasswordNoteDao();
         initView();
         notesQuery = noteDao.queryBuilder().orderAsc(PasswordNoteDao.Properties.NotFavorite,
                 PasswordNoteDao.Properties.NotLetter, PasswordNoteDao.Properties.Name).build();
         updateNotes();
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_main_activity, menu);
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.action_change:
+                Intent intent = new Intent();
+                intent.setClass(MainActivity.this, MasterPasswordSettingActivity.class);
+                intent.putExtra("isInitialising", false);
+                startActivity(intent);
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
     }
 
     private void updateNotes() {

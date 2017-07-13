@@ -62,7 +62,7 @@ public class PasswordNoteAdapter extends RecyclerView.Adapter<PasswordNoteAdapte
             if (getHeaderId(position) == 1000) {
                 viewholder.header.setText("#" );
             } else {
-                viewholder.header.setText(String.format("%s", getHeaderId(position)));
+                viewholder.header.setText(String.format("%s", (char) getHeaderId(position)));
             }
         }
         viewholder.header.setBackgroundColor(getRandomColor());
