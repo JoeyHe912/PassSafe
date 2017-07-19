@@ -1,7 +1,6 @@
 package com.joeyhe.passwordmanager.utils;
 
 import java.nio.ByteBuffer;
-import java.security.Security;
 
 
 /**
@@ -18,9 +17,6 @@ public class PasswordGenerator {
     private final int ITERATION_COUNT = 1000;
     private final int KEY_LENGTH = 256;
     private String masterPass;
-    static {
-        Security.insertProviderAt(new org.spongycastle.jce.provider.BouncyCastleProvider(), 1);
-    }
 
     public PasswordGenerator(String masterPass){
         this.masterPass = masterPass;

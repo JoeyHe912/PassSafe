@@ -14,6 +14,7 @@
         <activity android:name=".activities.AuthenticationActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
@@ -29,6 +30,19 @@
             android:name=".activities.ViewActivity"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity android:name=".activities.MasterPasswordSettingActivity" />
+
+        <service
+            android:name=".services.KeyboardService"
+            android:label="keyboard"
+            android:permission="android.permission.BIND_INPUT_METHOD">
+            <intent-filter>
+                <action android:name="android.view.InputMethod" />
+            </intent-filter>
+
+            <meta-data
+                android:name="android.view.im"
+                android:resource="@xml/method" />
+        </service>
     </application>
 
 </manifest>

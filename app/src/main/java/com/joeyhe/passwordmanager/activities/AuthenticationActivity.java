@@ -3,6 +3,7 @@ package com.joeyhe.passwordmanager.activities;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.support.design.widget.TextInputLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.view.KeyEvent;
 import android.view.View;
@@ -10,6 +11,7 @@ import android.widget.EditText;
 
 import com.joeyhe.passwordmanager.R;
 import com.joeyhe.passwordmanager.db.DatabaseHelper;
+import com.joeyhe.passwordmanager.utils.DataCleanUtil;
 import com.joeyhe.passwordmanager.utils.HashUtil;
 
 import cn.pedant.SweetAlert.SweetAlertDialog;
@@ -59,7 +61,7 @@ public class AuthenticationActivity extends AppCompatActivity {
 
                 HashUtil hashUtil = new HashUtil(10000, 256, edtMp.getText().toString());
                 String iHash = hashUtil.getStringHash(sharedPreferences.getString("salt", null));
-                if (sharedPreferences.getString("hash", null).equals(iHash)) {
+                if (iHash.equals(sharedPreferences.getString("hash", null))) {
                     runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
@@ -68,6 +70,7 @@ public class AuthenticationActivity extends AppCompatActivity {
                         }
                     });
                     DatabaseHelper.initDatabase(AuthenticationActivity.this, edtMp.getText().toString());
+                    sharedPreferences.edit().putInt("wrongTimes", 0).apply();
                     Intent intent = new Intent();
                     intent.setClass(AuthenticationActivity.this, MainActivity.class);
                     intent.putExtra("MasterPassword", String.valueOf(edtMp.getText()));
@@ -79,11 +82,31 @@ public class AuthenticationActivity extends AppCompatActivity {
                     startActivity(intent);
                     AuthenticationActivity.this.finish();
                 } else {
+                    final int wrongTimes = sharedPreferences.getInt("wrongTimes", 0) + 1;
+                    final String wrongMsg;
+                    if (wrongTimes == 5) {
+                        sharedPreferences.edit().clear().apply();
+                        DataCleanUtil.cleanApplicationData(getApplicationContext());
+                        wrongMsg = "5 wrong tries! All data has been removed";
+                        pDialog.setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
+                            @Override
+                            public void onClick(SweetAlertDialog sweetAlertDialog) {
+                                finish();
+                            }
+                        });
+                    } else {
+                        sharedPreferences.edit().putInt("wrongTimes", wrongTimes).apply();
+                        wrongMsg = "5 wrong tries will cause all data being destroyed!";
+                    }
                     runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
-                            pDialog.setTitleText("Oops...")
-                                    .setContentText("Wrong Password")
+                            ((TextInputLayout) findViewById(R.id.til_authentication))
+                                    .setError(wrongTimes != 4 ?
+                                            "You have " + (5 - wrongTimes) + " tries left."
+                                            : "Warning! You only have 1 try left!");
+                            pDialog.setTitleText("Wrong Password")
+                                    .setContentText(wrongMsg)
                                     .changeAlertType(SweetAlertDialog.ERROR_TYPE);
                         }
                     });

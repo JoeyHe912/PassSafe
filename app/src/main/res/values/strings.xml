@@ -33,4 +33,5 @@
     <string name="set_master_password_tips">Please choose a strong Master Password which will be used to encrypt your password notes. And keep it safely. If you lose it, there will be no way to recover it.</string>
     <string name="open">open</string>
     <string name="change_master_password">Change Master Password</string>
+    <string name="subtype_en">English</string>
 </resources>
