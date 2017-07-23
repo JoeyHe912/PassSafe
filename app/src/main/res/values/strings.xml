@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">PasswordManager</string>
+    <string name="app_name">Password Manager</string>
 
     <!-- Strings related to login -->
     <string name="save">Save</string>
@@ -34,4 +34,11 @@
     <string name="open">open</string>
     <string name="change_master_password">Change Master Password</string>
     <string name="subtype_en">English</string>
+    <string name="keyboard_username">This is username.\nPlease click the left button to unlock</string>
+    <string name="keyboard_password">This is password.\nPlease click the left button to unlock</string>
+    <string name="give_access">Give Access</string>
+    <string name="enable_keyboard">Enable Keyboard</string>
+    <string name="enable_autofill_first_step">First step:\nEnable Password Manager secure keyboard</string>
+    <string name="enable_autofill_second_step">Second step:\nAllow Password Manager to have usage access</string>
+    <string name="enable_autofill">Enable autofill</string>
 </resources>

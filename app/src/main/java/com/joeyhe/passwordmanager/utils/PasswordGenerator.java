@@ -18,38 +18,38 @@ public class PasswordGenerator {
     private final int KEY_LENGTH = 256;
     private String masterPass;
 
-    public PasswordGenerator(String masterPass){
+    public PasswordGenerator(String masterPass) {
         this.masterPass = masterPass;
     }
 
-    public String generate(int length, boolean hasUpper, boolean hasLower, boolean hasSymbol, boolean hasDigit, boolean excludeSimilar){
+    public String generate(int length, boolean hasUpper, boolean hasLower, boolean hasSymbol, boolean hasDigit, boolean excludeSimilar) {
         StringBuilder pw = new StringBuilder();
         String dict = "";
-        if (hasUpper){
+        if (hasUpper) {
             dict = dict.concat(UPPERS);
         }
-        if (hasLower){
+        if (hasLower) {
             dict = dict.concat(LOWERS);
         }
-        if (hasSymbol){
+        if (hasSymbol) {
             dict = dict.concat(SYMBOLS);
         }
-        if (hasDigit){
+        if (hasDigit) {
             dict = dict.concat(DIGITS);
         }
-        if (excludeSimilar){
+        if (excludeSimilar) {
             dict = dict.replaceAll(SIMILAR, "");
         }
 
         int i = 0;
         HashUtil hashUtil = new HashUtil(ITERATION_COUNT, KEY_LENGTH, masterPass);
-        while(i < length){
+        while (i < length) {
             byte[] keyByte = hashUtil.deriveHash();
             int j = 0;
             while (i < length & j < keyByte.length) {
                 byte[] temp = new byte[2];
                 temp[0] = keyByte[j];
-                temp[1] = keyByte[j+1];
+                temp[1] = keyByte[j + 1];
                 ByteBuffer wrapped = ByteBuffer.wrap(temp);
                 short rand = wrapped.getShort();
                 pw.append(dict.charAt((rand & 0xFFFF) % dict.length()));

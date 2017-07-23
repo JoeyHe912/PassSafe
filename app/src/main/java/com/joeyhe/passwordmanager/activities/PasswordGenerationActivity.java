@@ -23,7 +23,7 @@ import cn.pedant.SweetAlert.SweetAlertDialog;
 
 
 public class PasswordGenerationActivity extends AppCompatActivity
-        implements NumberPickerDialogFragment.NumberPickerDialogHandlerV2{
+        implements NumberPickerDialogFragment.NumberPickerDialogHandlerV2 {
 
     private PasswordGenerator pg;
     private TextView passwordView;
@@ -47,27 +47,27 @@ public class PasswordGenerationActivity extends AppCompatActivity
         renew();
         listenSeekBar();
         android.support.v7.app.ActionBar actionBar = getSupportActionBar();
-        if(actionBar != null){
+        if (actionBar != null) {
             actionBar.setHomeButtonEnabled(true);
             actionBar.setDisplayHomeAsUpEnabled(true);
         }
     }
 
     private void initView() {
-        upper = (CheckBox)findViewById(R.id.chk_upper);
-        lower = (CheckBox)findViewById(R.id.chk_lower);
-        number = (CheckBox)findViewById(R.id.chk_number);
-        symbol = (CheckBox)findViewById(R.id.chk_symbol);
-        similar = (CheckBox)findViewById(R.id.chk_excludeSimilar);
-        length = (EditText)findViewById(R.id.txt_length);
+        upper = (CheckBox) findViewById(R.id.chk_upper);
+        lower = (CheckBox) findViewById(R.id.chk_lower);
+        number = (CheckBox) findViewById(R.id.chk_number);
+        symbol = (CheckBox) findViewById(R.id.chk_symbol);
+        similar = (CheckBox) findViewById(R.id.chk_excludeSimilar);
+        length = (EditText) findViewById(R.id.txt_length);
         passwordView = (TextView) findViewById(R.id.txt_pg_password);
-        sbLength = (SeekBar)findViewById(R.id.seek_length);
+        sbLength = (SeekBar) findViewById(R.id.seek_length);
     }
 
-    public void clickGenerate(View view){
+    public void clickGenerate(View view) {
         if (upper.isChecked() | lower.isChecked() | symbol.isChecked() | number.isChecked()) {
             renew();
-        }else{
+        } else {
             new SweetAlertDialog(this, SweetAlertDialog.ERROR_TYPE)
                     .setTitleText("Oops...")
                     .setContentText("Please include at least one type of characters.")
@@ -75,18 +75,18 @@ public class PasswordGenerationActivity extends AppCompatActivity
         }
     }
 
-    private void renew(){
+    private void renew() {
         String password = pg.generate(Integer.parseInt(length.getText().toString()),
                 upper.isChecked(), lower.isChecked(), symbol.isChecked(), number.isChecked(), similar.isChecked());
         passwordView.setText(password);
     }
 
-    private void listenSeekBar(){
+    private void listenSeekBar() {
         sbLength.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
             public void onProgressChanged(SeekBar seekBar, int i, boolean b) {
-                if (b){
-                    length.setText(i+4+"");
+                if (b) {
+                    length.setText(i + 4 + "");
                 }
             }
 
@@ -114,10 +114,10 @@ public class PasswordGenerationActivity extends AppCompatActivity
     @Override
     public void onDialogNumberSet(int reference, BigInteger number, double decimal, boolean isNegative, BigDecimal fullNumber) {
         length.setText(String.valueOf(number));
-        sbLength.setProgress(number.intValue()-4);
+        sbLength.setProgress(number.intValue() - 4);
     }
 
-    public void clickAccept(View view){
+    public void clickAccept(View view) {
         Intent intent = new Intent();
         intent.putExtra("Pass", passwordView.getText());
         setResult(RESULT_OK, intent);
@@ -125,7 +125,7 @@ public class PasswordGenerationActivity extends AppCompatActivity
     }
 
     @Override
-    public void onBackPressed(){
+    public void onBackPressed() {
         Intent intent = new Intent();
         intent.putExtra("Pass", pass);
         setResult(RESULT_OK, intent);

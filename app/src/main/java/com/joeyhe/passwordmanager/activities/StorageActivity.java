@@ -29,13 +29,14 @@ public class StorageActivity extends AppCompatActivity {
     private PasswordNoteDao noteDao;
     private PasswordNote passNote;
     private boolean isEdit;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_storage);
         initView();
         ActionBar actionBar = getSupportActionBar();
-        if(actionBar != null){
+        if (actionBar != null) {
             actionBar.setHomeButtonEnabled(true);
             actionBar.setDisplayHomeAsUpEnabled(true);
         }
@@ -44,12 +45,12 @@ public class StorageActivity extends AppCompatActivity {
         Intent intent = getIntent();
         isEdit = intent.getBooleanExtra("isEdit", false);
         if (isEdit) {
-            setTitle("Editing" );
+            setTitle("Editing");
             long id = intent.getLongExtra("id", 1);
             passNote = noteDao.load(id);
             setValues();
         } else {
-            setTitle("Adding" );
+            setTitle("Adding");
             passNote = new PasswordNote();
         }
     }
@@ -69,8 +70,8 @@ public class StorageActivity extends AppCompatActivity {
             case R.id.action_save:
                 if (name.getText().toString().isEmpty()) {
                     new SweetAlertDialog(this, SweetAlertDialog.ERROR_TYPE)
-                            .setTitleText("Oops..." )
-                            .setContentText("Please give a name for this note" )
+                            .setTitleText("Oops...")
+                            .setContentText("Please give a name for this note")
                             .show();
                 } else {
                     passNote.setName(name.getText().toString());
@@ -96,11 +97,11 @@ public class StorageActivity extends AppCompatActivity {
     }
 
     private void initView() {
-        name = (TextView)findViewById((R.id.edt_storage_name));
-        website = (TextView)findViewById((R.id.edt_storage_website));
-        login = (TextView)findViewById((R.id.edt_storage_login));
+        name = (TextView) findViewById((R.id.edt_storage_name));
+        website = (TextView) findViewById((R.id.edt_storage_website));
+        login = (TextView) findViewById((R.id.edt_storage_login));
         pass = (TextView) findViewById(R.id.edt_storage_password);
-        note = (TextView)findViewById((R.id.edt_storage_note));
+        note = (TextView) findViewById((R.id.edt_storage_note));
     }
 
     private void setValues() {
@@ -119,7 +120,7 @@ public class StorageActivity extends AppCompatActivity {
     }
 
     @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data){
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         switch (resultCode) {
             case RESULT_OK:
                 pass.setText(data.getStringExtra("Pass"));
@@ -129,12 +130,12 @@ public class StorageActivity extends AppCompatActivity {
     }
 
     @Override
-    public void onBackPressed(){
+    public void onBackPressed() {
         new SweetAlertDialog(this, SweetAlertDialog.WARNING_TYPE)
                 .setTitleText("Are you sure?")
-                .setContentText("You will exit without saving." )
-                .setConfirmText("Yes" )
-                .setCancelText("No" )
+                .setContentText("You will exit without saving.")
+                .setConfirmText("Yes")
+                .setCancelText("No")
                 .showCancelButton(true)
                 .setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
                     @Override

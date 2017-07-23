@@ -3,7 +3,12 @@
     xmlns:tools="http://schemas.android.com/tools"
     package="com.joeyhe.passwordmanager">
 
+    <uses-permission
+        android:name="android.permission.PACKAGE_USAGE_STATS"
+        tools:ignore="ProtectedPermissions" />
+
     <application
+        android:name=".PasswordManager"
         android:allowBackup="true"
         android:fullBackupContent="true"
         android:icon="@mipmap/ic_launcher"
@@ -11,7 +16,9 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         tools:replace="android:icon">
-        <activity android:name=".activities.AuthenticationActivity">
+        <activity
+            android:name=".activities.AuthenticationActivity"
+            android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -20,20 +27,25 @@
         </activity>
         <activity
             android:name=".activities.PasswordGenerationActivity"
-            android:label="Password Generator" />
+            android:label="Password Generator"
+            android:screenOrientation="portrait" />
         <activity android:name=".activities.StorageActivity" />
         <activity
             android:name=".activities.MainActivity"
             android:label="@string/title_activity_main_page"
+            android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".activities.ViewActivity"
+            android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar" />
-        <activity android:name=".activities.MasterPasswordSettingActivity" />
+        <activity
+            android:name=".activities.MasterPasswordSettingActivity"
+            android:screenOrientation="portrait" />
 
         <service
             android:name=".services.KeyboardService"
-            android:label="keyboard"
+            android:label="Password Manager secure keyboard"
             android:permission="android.permission.BIND_INPUT_METHOD">
             <intent-filter>
                 <action android:name="android.view.InputMethod" />
@@ -43,6 +55,11 @@
                 android:name="android.view.im"
                 android:resource="@xml/method" />
         </service>
+
+        <activity
+            android:name=".activities.EnableAutofillActivity"
+            android:label="Enable autofill functionality"
+            android:screenOrientation="portrait" />
     </application>
 
 </manifest>

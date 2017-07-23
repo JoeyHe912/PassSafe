@@ -57,10 +57,10 @@ public class PasswordNoteAdapter extends RecyclerView.Adapter<PasswordNoteAdapte
     @Override
     public void onBindHeaderViewHolder(HeaderHolder viewholder, int position) {
         if (getHeaderId(position) == 2000) {
-            viewholder.header.setText("☆" );
+            viewholder.header.setText("☆");
         } else {
             if (getHeaderId(position) == 1000) {
-                viewholder.header.setText("#" );
+                viewholder.header.setText("#");
             } else {
                 viewholder.header.setText(String.format("%s", (char) getHeaderId(position)));
             }

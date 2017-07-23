@@ -14,19 +14,19 @@ public class DatabaseHelper {
     private String masterPass;
     private Database db;
 
+    private DatabaseHelper(Context context, String masterPass) {
+        this.masterPass = masterPass;
+        DaoMaster.DevOpenHelper helper = new DaoMaster.DevOpenHelper(context, "password-notes-db");
+        db = helper.getEncryptedWritableDb(masterPass);
+        daoSession = new DaoMaster(db).newSession();
+    }
+
     public static void initDatabase(Context context, String masterPass) {
         instance = new DatabaseHelper(context, masterPass);
     }
 
     public static DatabaseHelper getInstance() {
         return instance;
-    }
-
-    private DatabaseHelper(Context context, String masterPass) {
-        this.masterPass = masterPass;
-        DaoMaster.DevOpenHelper helper = new DaoMaster.DevOpenHelper(context, "password-notes-db");
-        db = helper.getEncryptedWritableDb(masterPass);
-        daoSession = new DaoMaster(db).newSession();
     }
 
     public DaoSession getDaoSession() {
@@ -39,5 +39,11 @@ public class DatabaseHelper {
 
     public void changeMasterPass(String newPass) {
         db.execSQL(String.format("PRAGMA rekey = '%s'", newPass));
+    }
+
+    public void closeDatabase() {
+        if (db != null) {
+            db.close();
+        }
     }
 }

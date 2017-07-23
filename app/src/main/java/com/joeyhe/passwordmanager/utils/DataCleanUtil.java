@@ -8,7 +8,7 @@ import java.io.File;
  * Created by HGY on 2017/7/13.
  */
 
-// From; http://blog.csdn.net/wwj_748/article/details/42737607
+// Reference; http://blog.csdn.net/wwj_748/article/details/42737607
 
 public class DataCleanUtil {
     public static void cleanInternalCache(Context context) {

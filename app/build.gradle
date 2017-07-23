@@ -40,5 +40,5 @@ dependencies {
 }
 greendao {
     targetGenDir 'src/main/java'
-    schemaVersion 4
+    schemaVersion 5
 }

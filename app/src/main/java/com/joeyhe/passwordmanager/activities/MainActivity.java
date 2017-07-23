@@ -1,5 +1,6 @@
 package com.joeyhe.passwordmanager.activities;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
@@ -14,12 +15,14 @@ import android.view.View;
 import com.bigkoo.quicksidebar.QuickSideBarTipsView;
 import com.bigkoo.quicksidebar.QuickSideBarView;
 import com.bigkoo.quicksidebar.listener.OnQuickSideBarTouchListener;
+import com.joeyhe.passwordmanager.PasswordManager;
 import com.joeyhe.passwordmanager.R;
 import com.joeyhe.passwordmanager.adapters.PasswordNoteAdapter;
 import com.joeyhe.passwordmanager.db.DaoSession;
 import com.joeyhe.passwordmanager.db.DatabaseHelper;
 import com.joeyhe.passwordmanager.db.PasswordNote;
 import com.joeyhe.passwordmanager.db.PasswordNoteDao;
+import com.joeyhe.passwordmanager.fragments.PromptDialog;
 
 import org.greenrobot.greendao.query.Query;
 
@@ -33,14 +36,18 @@ public class MainActivity extends AppCompatActivity implements OnQuickSideBarTou
 
     private final HashMap<String, Integer> letters = new HashMap<>();
     private final ArrayList<String> customLetters = new ArrayList<>();
+
     private RecyclerView rcyNotes;
     private PasswordNoteAdapter noteAdapter;
-    private PasswordNoteDao noteDao;
-    private Query<PasswordNote> notesQuery;
     private QuickSideBarView quickSideBarView;
     private QuickSideBarTipsView quickSideBarTipsView;
     private FloatingActionButton fabAdd;
+
+    private PasswordNoteDao noteDao;
+    private Query<PasswordNote> notesQuery;
     private List<PasswordNote> notes;
+    private PasswordManager pm;
+    private boolean isFromIME;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,28 +55,69 @@ public class MainActivity extends AppCompatActivity implements OnQuickSideBarTou
         setContentView(R.layout.activity_main);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+        isFromIME = getIntent().getBooleanExtra("isFromIME", false);
+        pm = (PasswordManager) getApplication();
         DaoSession daoSession = DatabaseHelper.getInstance().getDaoSession();
         noteDao = daoSession.getPasswordNoteDao();
         initView();
         notesQuery = noteDao.queryBuilder().orderAsc(PasswordNoteDao.Properties.NotFavorite,
                 PasswordNoteDao.Properties.NotLetter, PasswordNoteDao.Properties.Name).build();
         updateNotes();
+        if (isFromIME) {
+            reformView();
+        }
+    }
+
+    private void reformView() {
+        setTitle("Select an account.");
+        android.support.v7.app.ActionBar actionBar = getSupportActionBar();
+        if (actionBar != null) {
+            actionBar.setHomeButtonEnabled(true);
+            actionBar.setDisplayHomeAsUpEnabled(true);
+        }
+        String packageName = getIntent().getStringExtra("packageName");
+        if (packageName != null) {
+            final List<PasswordNote> notes = noteDao.queryBuilder()
+                    .where(PasswordNoteDao.Properties.PackageName.eq(packageName)).build().list();
+            if (!notes.isEmpty()) {
+                PromptDialog dialog = new PromptDialog();
+                dialog.show(notes, getSupportFragmentManager(),
+                        new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialogInterface, int i) {
+                                PasswordNote note = notes.get(i);
+                                pm.setLogin(note.getUserName());
+                                pm.setPassword(note.getPassword());
+                                MainActivity.this.finish();
+                            }
+                        });
+            }
+        }
     }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.menu_main_activity, menu);
+        if (!isFromIME) {
+            getMenuInflater().inflate(R.menu.menu_main_activity, menu);
+        }
         return super.onCreateOptionsMenu(menu);
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
+        Intent intent = new Intent();
         switch (item.getItemId()) {
             case R.id.action_change:
-                Intent intent = new Intent();
                 intent.setClass(MainActivity.this, MasterPasswordSettingActivity.class);
                 intent.putExtra("isInitialising", false);
                 startActivity(intent);
+                return true;
+            case R.id.action_enable:
+                intent.setClass(MainActivity.this, EnableAutofillActivity.class);
+                startActivity(intent);
+                return true;
+            case android.R.id.home:
+                finish();
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
@@ -118,9 +166,17 @@ public class MainActivity extends AppCompatActivity implements OnQuickSideBarTou
             public void onNoteClick(int position) {
                 PasswordNote note = noteAdapter.getNote(position);
                 Intent intent = new Intent();
-                intent.setClass(MainActivity.this, ViewActivity.class);
-                intent.putExtra("id", note.getId());
-                startActivityForResult(intent, 0);
+                if (isFromIME) {
+                    pm.setLogin(note.getUserName());
+                    pm.setPassword(note.getPassword());
+                    note.setPackageName(getIntent().getStringExtra("packageName"));
+                    noteDao.update(note);
+                    finish();
+                } else {
+                    intent.setClass(MainActivity.this, ViewActivity.class);
+                    intent.putExtra("id", note.getId());
+                    startActivityForResult(intent, 0);
+                }
             }
         };
         noteAdapter = new PasswordNoteAdapter(noteClickListener);
@@ -130,17 +186,21 @@ public class MainActivity extends AppCompatActivity implements OnQuickSideBarTou
         quickSideBarTipsView = (QuickSideBarTipsView) findViewById(R.id.quickSideBarTipsView);
         quickSideBarView.setOnQuickSideBarTouchListener(this);
         fabAdd = (FloatingActionButton) findViewById(R.id.fab_add);
-        rcyNotes.addOnScrollListener(new RecyclerView.OnScrollListener() {
-            @Override
-            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
-                if (dy > 0 && fabAdd.isShown()) {
-                    fabAdd.hide();
+        if (isFromIME) {
+            fabAdd.hide();
+        } else {
+            rcyNotes.addOnScrollListener(new RecyclerView.OnScrollListener() {
+                @Override
+                public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+                    if (dy > 0 && fabAdd.isShown()) {
+                        fabAdd.hide();
+                    }
+                    if (dy < 0 && !fabAdd.isShown()) {
+                        fabAdd.show();
+                    }
                 }
-                if (dy < 0 && !fabAdd.isShown()) {
-                    fabAdd.show();
-                }
-            }
-        });
+            });
+        }
     }
 
     public void clickAdd(View view) {
@@ -163,7 +223,6 @@ public class MainActivity extends AppCompatActivity implements OnQuickSideBarTou
     @Override
     public void onLetterChanged(String letter, int position, float y) {
         quickSideBarTipsView.setText(letter, position, y);
-        //有此key则获取位置并滚动到该位置
         if (letters.containsKey(letter)) {
             rcyNotes.scrollToPosition(letters.get(letter));
             LinearLayoutManager mLayoutManager =
@@ -175,5 +234,11 @@ public class MainActivity extends AppCompatActivity implements OnQuickSideBarTou
     @Override
     public void onLetterTouching(boolean touching) {
         quickSideBarTipsView.setVisibility(touching ? View.VISIBLE : View.INVISIBLE);
+    }
+
+    @Override
+    protected void onDestroy() {
+        DatabaseHelper.getInstance().closeDatabase();
+        super.onDestroy();
     }
 }

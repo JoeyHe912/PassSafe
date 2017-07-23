@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.support.design.widget.TextInputLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.view.KeyEvent;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
 
@@ -20,6 +21,7 @@ public class AuthenticationActivity extends AppCompatActivity {
 
     private SharedPreferences sharedPreferences;
     private EditText edtMp;
+    private boolean isFromIME;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,6 +40,10 @@ public class AuthenticationActivity extends AppCompatActivity {
                     return false;
                 }
             });
+            isFromIME = getIntent().getBooleanExtra("isFromIME", false);
+            if (isFromIME) {
+                reformView();
+            }
         } else {
             Intent intent = new Intent();
             intent.setClass(AuthenticationActivity.this, MasterPasswordSettingActivity.class);
@@ -58,7 +64,6 @@ public class AuthenticationActivity extends AppCompatActivity {
         new Thread(new Runnable() {
             @Override
             public void run() {
-
                 HashUtil hashUtil = new HashUtil(10000, 256, edtMp.getText().toString());
                 String iHash = hashUtil.getStringHash(sharedPreferences.getString("salt", null));
                 if (iHash.equals(sharedPreferences.getString("hash", null))) {
@@ -73,12 +78,14 @@ public class AuthenticationActivity extends AppCompatActivity {
                     sharedPreferences.edit().putInt("wrongTimes", 0).apply();
                     Intent intent = new Intent();
                     intent.setClass(AuthenticationActivity.this, MainActivity.class);
-                    intent.putExtra("MasterPassword", String.valueOf(edtMp.getText()));
+                    intent.putExtra("isFromIME", isFromIME);
+                    intent.putExtra("packageName", getIntent().getStringExtra("packageName"));
                     try {
                         Thread.sleep(500);
                     } catch (InterruptedException e) {
                         e.printStackTrace();
                     }
+                    pDialog.dismiss();
                     startActivity(intent);
                     AuthenticationActivity.this.finish();
                 } else {
@@ -113,5 +120,24 @@ public class AuthenticationActivity extends AppCompatActivity {
                 }
             }
         }).start();
+    }
+
+    private void reformView() {
+        setTitle("Enter your master password.");
+        android.support.v7.app.ActionBar actionBar = getSupportActionBar();
+        if (actionBar != null) {
+            actionBar.setHomeButtonEnabled(true);
+            actionBar.setDisplayHomeAsUpEnabled(true);
+        }
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                finish();
+                return true;
+        }
+        return super.onOptionsItemSelected(item);
     }
 }

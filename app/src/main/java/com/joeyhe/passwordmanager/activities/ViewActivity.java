@@ -103,10 +103,10 @@ public class ViewActivity extends AppCompatActivity {
                 return true;
             case R.id.action_delete:
                 new SweetAlertDialog(this, SweetAlertDialog.WARNING_TYPE)
-                        .setTitleText("Are you sure?" )
-                        .setContentText("You will delete this note permanently." )
-                        .setConfirmText("Yes,delete it!" )
-                        .setCancelText("No,cancel plx!" )
+                        .setTitleText("Are you sure?")
+                        .setContentText("You will delete this note permanently.")
+                        .setConfirmText("Yes,delete it!")
+                        .setCancelText("No,cancel plx!")
                         .showCancelButton(true)
                         .setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
                             @Override
@@ -139,15 +139,15 @@ public class ViewActivity extends AppCompatActivity {
     }
 
     private void initView() {
-        website = (EditText)findViewById(R.id.edt_view_website);
-        login = (EditText)findViewById(R.id.edt_view_login);
-        password = (EditText)findViewById(R.id.edt_view_password);
-        note = (EditText)findViewById(R.id.edt_view_note);
-        created = (EditText)findViewById(R.id.edt_view_created);
-        modified = (EditText)findViewById(R.id.edt_view_modified);
-        accessed = (EditText)findViewById(R.id.edt_view_accessed);
+        website = (EditText) findViewById(R.id.edt_view_website);
+        login = (EditText) findViewById(R.id.edt_view_login);
+        password = (EditText) findViewById(R.id.edt_view_password);
+        note = (EditText) findViewById(R.id.edt_view_note);
+        created = (EditText) findViewById(R.id.edt_view_created);
+        modified = (EditText) findViewById(R.id.edt_view_modified);
+        accessed = (EditText) findViewById(R.id.edt_view_accessed);
         Intent intent = getIntent();
-        long id = intent.getLongExtra("id",1);
+        long id = intent.getLongExtra("id", 1);
         passNote = noteDao.load(id);
         notFavorite = passNote.getNotFavorite();
     }
@@ -158,7 +158,7 @@ public class ViewActivity extends AppCompatActivity {
         login.setText(passNote.getUserName());
         password.setText(passNote.getPassword());
         note.setText(passNote.getNote());
-        DateFormat dateFormat = DateFormat.getDateTimeInstance(java.text.DateFormat.MEDIUM,DateFormat.MEDIUM);
+        DateFormat dateFormat = DateFormat.getDateTimeInstance(java.text.DateFormat.MEDIUM, DateFormat.MEDIUM);
         created.setText(dateFormat.format(passNote.getCreatedDate()));
         modified.setText(dateFormat.format(passNote.getModifiedDate()));
         accessed.setText(dateFormat.format(passNote.getAccessedDate()));
@@ -183,7 +183,7 @@ public class ViewActivity extends AppCompatActivity {
     }
 
     public void clickCopy(View view) {
-        ClipboardManager clipboardManager = (ClipboardManager)getSystemService(CLIPBOARD_SERVICE);
+        ClipboardManager clipboardManager = (ClipboardManager) getSystemService(CLIPBOARD_SERVICE);
         ClipData clipData = null;
         switch (view.getId()) {
             case R.id.btn_copyLogin:
@@ -195,7 +195,7 @@ public class ViewActivity extends AppCompatActivity {
             default:
         }
         clipboardManager.setPrimaryClip(clipData);
-        Toast.makeText(this,"Copied!",Toast.LENGTH_SHORT).show();
+        Toast.makeText(this, "Copied!", Toast.LENGTH_SHORT).show();
     }
 
     @Override
