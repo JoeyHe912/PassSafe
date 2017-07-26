@@ -2,6 +2,6 @@
 <input-method xmlns:android="http://schemas.android.com/apk/res/android">
     <subtype
         android:imeSubtypeLocale="en_US"
-        android:imeSubtypeMode="Password Manager secure keyboard"
+        android:imeSubtypeMode="PassSafe Secure Keyboard"
         android:label="@string/subtype_en" />
 </input-method>

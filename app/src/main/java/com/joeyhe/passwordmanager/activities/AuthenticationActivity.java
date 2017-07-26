@@ -19,9 +19,13 @@ import cn.pedant.SweetAlert.SweetAlertDialog;
 
 public class AuthenticationActivity extends AppCompatActivity {
 
+    public static final int GET_NOTE = 0;
+    public static final int OPEN_GENERATOR = 1;
+    public static final int SAVE_NOTE = 2;
+
     private SharedPreferences sharedPreferences;
     private EditText edtMp;
-    private boolean isFromIME;
+    private int action;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,8 +44,8 @@ public class AuthenticationActivity extends AppCompatActivity {
                     return false;
                 }
             });
-            isFromIME = getIntent().getBooleanExtra("isFromIME", false);
-            if (isFromIME) {
+            action = getIntent().getIntExtra("action", -1);
+            if (action != -1) {
                 reformView();
             }
         } else {
@@ -77,9 +81,22 @@ public class AuthenticationActivity extends AppCompatActivity {
                     DatabaseHelper.initDatabase(AuthenticationActivity.this, edtMp.getText().toString());
                     sharedPreferences.edit().putInt("wrongTimes", 0).apply();
                     Intent intent = new Intent();
-                    intent.setClass(AuthenticationActivity.this, MainActivity.class);
-                    intent.putExtra("isFromIME", isFromIME);
-                    intent.putExtra("packageName", getIntent().getStringExtra("packageName"));
+                    switch (action) {
+                        case OPEN_GENERATOR:
+                            intent.setClass(AuthenticationActivity.this, PasswordGenerationActivity.class);
+                            intent.putExtra("isFromIME", true);
+                            break;
+                        case SAVE_NOTE:
+                            intent.setClass(AuthenticationActivity.this, StorageActivity.class);
+                            intent.putExtra("packageName", getIntent().getStringExtra("packageName"));
+                            intent.putExtra("isFromIME", true);
+                            break;
+                        case GET_NOTE:
+                            intent.putExtra("packageName", getIntent().getStringExtra("packageName"));
+                        default:
+                            intent.setClass(AuthenticationActivity.this, MainActivity.class);
+                            intent.putExtra("isFromIME", action == GET_NOTE);
+                    }
                     try {
                         Thread.sleep(500);
                     } catch (InterruptedException e) {
@@ -94,7 +111,7 @@ public class AuthenticationActivity extends AppCompatActivity {
                     if (wrongTimes == 5) {
                         sharedPreferences.edit().clear().apply();
                         DataCleanUtil.cleanApplicationData(getApplicationContext());
-                        wrongMsg = "5 wrong tries! All data has been removed";
+                        wrongMsg = "5 wrong tries! All data has been eliminated";
                         pDialog.setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
                             @Override
                             public void onClick(SweetAlertDialog sweetAlertDialog) {
@@ -103,7 +120,7 @@ public class AuthenticationActivity extends AppCompatActivity {
                         });
                     } else {
                         sharedPreferences.edit().putInt("wrongTimes", wrongTimes).apply();
-                        wrongMsg = "5 wrong tries will cause all data being destroyed!";
+                        wrongMsg = "5 wrong tries will cause elimination of all data!";
                     }
                     runOnUiThread(new Runnable() {
                         @Override

@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Password Manager</string>
+    <string name="app_name">PassSafe</string>
 
     <!-- Strings related to login -->
     <string name="save">Save</string>
@@ -17,7 +17,6 @@
     <string name="symbols_e_g">Symbols (e.g. !@#$%)</string>
     <string name="uppercase_letters_e_g_abcde">Uppercase letters (e.g. ABCDE)</string>
     <string name="length">length</string>
-    <string name="title_activity_main_page">Password Manager</string>
     <string name="title_activity_view_page">ViewPage</string>
     <string name="created">created</string>
     <string name="modified">modified</string>
@@ -30,15 +29,17 @@
     <string name="enter_master_password">Enter Master Password</string>
     <string name="confirm_master_password">Confirm Master Password</string>
     <string name="authenticate">Authenticate</string>
-    <string name="set_master_password_tips">Please choose a strong Master Password which will be used to encrypt your password notes. And keep it safely. If you lose it, there will be no way to recover it.</string>
+    <string name="set_master_password_tips">Please choose a strong Master Password which will be used to login this app and encrypt your password notes. And keep it safely. If you lose it, there will be no way to recover it.</string>
     <string name="open">open</string>
     <string name="change_master_password">Change Master Password</string>
     <string name="subtype_en">English</string>
-    <string name="keyboard_username">This is username.\nPlease click the left button to unlock</string>
-    <string name="keyboard_password">This is password.\nPlease click the left button to unlock</string>
+    <string name="keyboard_username">Current editing username has been saved, click the save button to create a new account note, or click the left button to unlock a password note.</string>
+    <string name="keyboard_password">Current editing password has been saved, click the save button to create a new account note, or click the left button to unlock a password note.</string>
     <string name="give_access">Give Access</string>
     <string name="enable_keyboard">Enable Keyboard</string>
-    <string name="enable_autofill_first_step">First step:\nEnable Password Manager secure keyboard</string>
-    <string name="enable_autofill_second_step">Second step:\nAllow Password Manager to have usage access</string>
+    <string name="enable_autofill_first_step">First step:\nEnable PassSafe Secure Keyboard</string>
+    <string name="enable_autofill_second_step">Second step:\nAllow PassSafe to have usage access</string>
     <string name="enable_autofill">Enable autofill</string>
+    <string name="autofill_tip">When you need fill the login information, just switch the input method to PassSafe Secure Keyboard and use the buttons above it.</string>
+    <string name="generator_tip">Please click the password button to enter the generated password</string>
 </resources>

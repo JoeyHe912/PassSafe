@@ -9,6 +9,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
 
+import com.joeyhe.passwordmanager.PasswordManager;
 import com.joeyhe.passwordmanager.R;
 import com.joeyhe.passwordmanager.db.DaoSession;
 import com.joeyhe.passwordmanager.db.DatabaseHelper;
@@ -29,6 +30,7 @@ public class StorageActivity extends AppCompatActivity {
     private PasswordNoteDao noteDao;
     private PasswordNote passNote;
     private boolean isEdit;
+    private boolean isFromIME;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,6 +46,7 @@ public class StorageActivity extends AppCompatActivity {
         noteDao = daoSession.getPasswordNoteDao();
         Intent intent = getIntent();
         isEdit = intent.getBooleanExtra("isEdit", false);
+        isFromIME = intent.getBooleanExtra("isFromIME", false);
         if (isEdit) {
             setTitle("Editing");
             long id = intent.getLongExtra("id", 1);
@@ -52,6 +55,17 @@ public class StorageActivity extends AppCompatActivity {
         } else {
             setTitle("Adding");
             passNote = new PasswordNote();
+            if (getIntent().getBooleanExtra("isFromIME", false)) {
+                PasswordManager pm = (PasswordManager) getApplication();
+                login.setText(pm.getiLogin());
+                pass.setText(pm.getiPassword());
+                String packageName = getIntent().getStringExtra("packageName");
+                if (!packageName.isEmpty()) {
+                    String[] packageNames = packageName.split("\\.");
+                    name.setText(packageNames[packageNames.length - 1]);
+                    passNote.setPackageName(packageName);
+                }
+            }
         }
     }
 

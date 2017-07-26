@@ -9,9 +9,11 @@ import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.SeekBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.codetroopers.betterpickers.numberpicker.NumberPickerBuilder;
 import com.codetroopers.betterpickers.numberpicker.NumberPickerDialogFragment;
+import com.joeyhe.passwordmanager.PasswordManager;
 import com.joeyhe.passwordmanager.R;
 import com.joeyhe.passwordmanager.db.DatabaseHelper;
 import com.joeyhe.passwordmanager.utils.PasswordGenerator;
@@ -118,9 +120,17 @@ public class PasswordGenerationActivity extends AppCompatActivity
     }
 
     public void clickAccept(View view) {
-        Intent intent = new Intent();
-        intent.putExtra("Pass", passwordView.getText());
-        setResult(RESULT_OK, intent);
+        if (getIntent().getBooleanExtra("isFromIME", false)) {
+            PasswordManager pm = (PasswordManager) getApplication();
+            pm.setPassword(passwordView.getText().toString());
+            pm.setiPassword(passwordView.getText().toString());
+            Toast.makeText(this, getResources().getString(R.string.generator_tip),
+                    Toast.LENGTH_SHORT).show();
+        } else {
+            Intent intent = new Intent();
+            intent.putExtra("Pass", passwordView.getText());
+            setResult(RESULT_OK, intent);
+        }
         finish();
     }
 

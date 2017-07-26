@@ -39,7 +39,7 @@ public class KeyboardService extends InputMethodService
     }
 
     @Override
-    public void onPress(int i) {
+    public void onPress(final int i) {
 
     }
 
@@ -52,6 +52,9 @@ public class KeyboardService extends InputMethodService
     public void onKey(int i, int[] ints) {
         InputConnection ic = getCurrentInputConnection();
         PasswordManager pm = (PasswordManager) getApplication();
+        Intent intent = new Intent();
+        intent.setClass(this, AuthenticationActivity.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_EXCLUDE_FROM_RECENTS | Intent.FLAG_ACTIVITY_CLEAR_TASK);
         switch (i) {
             case Keyboard.KEYCODE_DELETE:
                 ic.deleteSurroundingText(1, 0);
@@ -75,10 +78,7 @@ public class KeyboardService extends InputMethodService
                 break;
             case -13:
                 String packageName = ProcessDetectUtil.getCurrentProcess(this);
-                Intent intent = new Intent();
-                intent.setClass(this, AuthenticationActivity.class);
-                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_EXCLUDE_FROM_RECENTS | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                intent.putExtra("isFromIME", true);
+                intent.putExtra("action", AuthenticationActivity.GET_NOTE);
                 intent.putExtra("packageName", packageName);
                 getApplicationContext().startActivity(intent);
                 break;
@@ -89,7 +89,8 @@ public class KeyboardService extends InputMethodService
                     pm.setLogin("");
                 } else {
                     Toast.makeText(this, getResources().getString(R.string.keyboard_username),
-                            Toast.LENGTH_SHORT).show();
+                            Toast.LENGTH_LONG).show();
+                    pm.setiLogin(ic.getExtractedText(new ExtractedTextRequest(), 0).text.toString());
                 }
                 break;
             case -15:
@@ -99,8 +100,18 @@ public class KeyboardService extends InputMethodService
                     pm.setPassword("");
                 } else {
                     Toast.makeText(this, getResources().getString(R.string.keyboard_password),
-                            Toast.LENGTH_SHORT).show();
+                            Toast.LENGTH_LONG).show();
+                    pm.setiPassword(ic.getExtractedText(new ExtractedTextRequest(), 0).text.toString());
                 }
+                break;
+            case -16:
+                intent.putExtra("action", AuthenticationActivity.OPEN_GENERATOR);
+                getApplicationContext().startActivity(intent);
+                break;
+            case -17:
+                intent.putExtra("action", AuthenticationActivity.SAVE_NOTE);
+                intent.putExtra("packageName", ProcessDetectUtil.getCurrentProcess(this));
+                getApplicationContext().startActivity(intent);
                 break;
             default:
                 char code = (char) i;

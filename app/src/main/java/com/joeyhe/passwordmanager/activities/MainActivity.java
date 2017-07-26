@@ -235,10 +235,4 @@ public class MainActivity extends AppCompatActivity implements OnQuickSideBarTou
     public void onLetterTouching(boolean touching) {
         quickSideBarTipsView.setVisibility(touching ? View.VISIBLE : View.INVISIBLE);
     }
-
-    @Override
-    protected void onDestroy() {
-        DatabaseHelper.getInstance().closeDatabase();
-        super.onDestroy();
-    }
 }
