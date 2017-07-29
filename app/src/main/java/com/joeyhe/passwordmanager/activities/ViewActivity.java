@@ -1,7 +1,5 @@
 package com.joeyhe.passwordmanager.activities;
 
-import android.content.ClipData;
-import android.content.ClipboardManager;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -17,6 +15,7 @@ import android.webkit.URLUtil;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.joeyhe.passwordmanager.PasswordManager;
 import com.joeyhe.passwordmanager.R;
 import com.joeyhe.passwordmanager.db.DaoSession;
 import com.joeyhe.passwordmanager.db.DatabaseHelper;
@@ -183,19 +182,17 @@ public class ViewActivity extends AppCompatActivity {
     }
 
     public void clickCopy(View view) {
-        ClipboardManager clipboardManager = (ClipboardManager) getSystemService(CLIPBOARD_SERVICE);
-        ClipData clipData = null;
+        PasswordManager pm = (PasswordManager) getApplication();
         switch (view.getId()) {
             case R.id.btn_copyLogin:
-                clipData = ClipData.newPlainText("login", login.getText());
+                pm.setLogin(login.getText().toString());
                 break;
             case R.id.btn_copyPass:
-                clipData = ClipData.newPlainText("pass", password.getText());
+                pm.setPassword(password.getText().toString());
                 break;
             default:
         }
-        clipboardManager.setPrimaryClip(clipData);
-        Toast.makeText(this, "Copied!", Toast.LENGTH_SHORT).show();
+        Toast.makeText(this, "Copied to PassSafe Secure Keyboard!", Toast.LENGTH_SHORT).show();
     }
 
     @Override
